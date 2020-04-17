@@ -1,0 +1,66 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}{{ unit.name }} | {{ unit.roadmap.title }}{% endblock %}
+{% block content %}
+
+<div class="wrapper bg-white" style="min-height: 400px;">
+    <div class="container">
+        <div class="row py-4 mb-5">
+            <div class="col-3 ml-auto">
+                <ul class="list-group shadow">
+                    {% for roadmap_unit in unit_list %}
+                        {% if roadmap_unit == unit %}
+                            <li class="list-group-item active">{{ unit }}</li>
+                        {% else %}
+                            <li class="list-group-item"><a href="{% url 'unit_detail' roadmap_unit.id %}">{{ roadmap_unit }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-8 mr-auto mb-5">
+                <div class="row" id="roadmap_objectives">
+                    <div class="container mt-3">
+                        <h6 class="px-3 pb-2">{{ unit.about }}</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12" >
+                        <div id="accordion">         
+                            {% for item in item_list %}
+                            <div class="card shadow">
+                                <div class="card-header bg-light" id="heading{{ item.id }}">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ item.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                      <h5 class="mb-0">{{ item.title }}</h5>
+                                    </button>
+                                    <div class="custom-control custom-checkbox float-right mt-2">
+                                        <input class="custom-control-input" type="checkbox" id="checkbox-1" checked="">
+                                        <label class="custom-control-label" for="checkbox-1"></label>
+                                    </div>   
+                                </div>
+    
+                                <div id="collapse{{ item.id }}" class="collapse " aria-labelledby="heading{{ item.id }}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <strong>Objectives:</strong>
+                                        <div>
+                                            {{ item.objectives }}
+                                        </div>
+                                        {% if item.link %}
+                                            <a class="btn btn-primary mt-4" href="{{ item.link }}" role="button">Go to link</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                        
+            
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

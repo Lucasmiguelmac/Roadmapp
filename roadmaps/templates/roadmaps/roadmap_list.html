@@ -1,0 +1,32 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}Roadmapp | Roadmaps{% endblock %}
+{% block content %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-8 ml-auto mr-auto">
+            {% for roadmap in roadmap_list %}
+            <div class="row py-4 px-md-4 px-lg-5">
+                <div class="col-12 mt-3" >
+                    <div class="card text-left" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
+                        <div class="card-horizontal" >
+                            <div class="img-square-wrapper">
+                                <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="200">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">{{ roadmap.title }}</h4>
+                                <small class="text-muted"><p>Created by <a href="">{{ roadmap.owner.username }}</a></p></small>
+                                <p class="card-text" id="dont-break-out">{{ roadmap.about|slice:":150"}}</p>
+                                <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary mb-3">Go to roadmap</a>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated {{ roadmap.updated_at|timesince }} ago.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

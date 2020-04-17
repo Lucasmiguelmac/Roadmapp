@@ -1,0 +1,107 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}{{ roadmap.title }} | Roadmapp{% endblock %}
+{% block content %}
+<div class="wrapper bg-light">
+    <header class="shadow bg-white">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-dark col-12 pt-5 pb-3">{{ roadmap.title }}</h1>
+            </div>
+        </div>
+    </header>
+    <div class=" py-5" style="min-height: 275px;">
+        <div class="container-fluid">
+            <div class="row mb-5" id="project_background">
+                <div class="col-2 ml-auto " id="section_title">
+                    <hr class="mb-0 shadow dark mr-0" style="border: 2px solid rgb(177, 177, 177); border-radius: 2px; width:11em;">
+                    <h2 class="pt-0 mt-0 pl-2 text-right mr-1">Description</h2>
+                </div>
+                <div class="col-6 mr-auto pt-4" id="objectives_and_summary">
+                    <div class="row" id="roadmap_objectives">
+                        <div class="container">
+                            <h6 class="px-3 pb-2">{{ roadmap.objectives }}</h6>
+                        </div>
+                    </div>
+                    <div class="row" id="roadmap_summary">
+                        <div class="container">
+                            <div class="card shadow">
+                                <div class="row px-4 pt-4" id="topics_and_methodsresources">
+                                    <div class="col-4" id="topics">
+                                        <h6>TOPICS</h6>
+                                        <p>
+                                        {% if roadmap.topics|length < 2 %}
+                                            {{ roadmap.topics }}
+                                        {% else %}
+                                            <ul>
+                                            {% for topic in roadmap.topics %}
+                                                <li>{{ topic }}</li>
+                                            {% endfor %}
+                                            </ul>                                          
+                                        {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="col-8" id="methods_and_resources">
+                                        <h6>METHODS AND RESOURCES</h6>
+                                        {{ roadmap.methods_and_resources }}
+                                    </div>
+                                </div>
+                                <div class="row px-4 pb-4 pt-3" id="lastupdated_and_estimatedtime">
+                                    <div class="col-4" id="last_updated">
+                                        <h6>LAST UPDATED</h6>
+                                        {{ roadmap.updated_at }}
+                                    </div>
+                                    <div class="col-8" id="estimated_time">
+                                        <h6>ESTIMATED TIME TO FINISH</h6>
+                                        {{ roadmap.estimated_time }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5" id="project_units">
+                <div class="col-2 ml-auto" id="section_title">
+                    <hr class="mb-0 shadow dark mr-0" style="border: 2px solid rgb(177, 177, 177); border-radius: 2px; width: 5em;">
+                    <h2 class="pt-0 mt-0 pl-2 text-right mr-1">Units</h2>
+                    
+                    
+                </div>
+                <div class="col-6 mr-auto pt-4" id="units">
+                
+                    <ul class="list-group shadow">
+                        {% for unit in unit_list %}
+                            <a href="{% url 'unit_detail' unit.id %}">
+                                <li class="list-group-item pt-3 pl-5">
+                                    <div class="custom-control custom-checkbox float-right mt-1">
+                                        <input class="custom-control-input" type="checkbox" id="checkbox-1" checked="">
+                                        <label class="custom-control-label" for="checkbox-1">
+                                    </div>
+                                        <h4>{{ unit }}</h4>
+                                    </label>
+                                </li>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+                
+
+                <!-- <div class="col-2">
+                    Roadmaps relacionados/ads
+                </div> -->
+
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

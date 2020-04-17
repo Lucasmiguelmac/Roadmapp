@@ -1,0 +1,175 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}Roadmapp | Home{% endblock %}
+{% block content %}
+    {% load static %}
+
+    <style>
+        .card-horizontal {
+            display: flex;
+            flex: 1 1 auto;
+        }
+        #dont-break-out {
+
+            /* These are technically the same, but use both */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+          
+            -ms-word-break: break-all;
+            /* This is the dangerous one in WebKit, as it breaks things wherever */
+            word-break: break-all;
+            /* Instead use this non-standard one: */
+            word-break: break-word;
+          
+            /* Adds a hyphen where the word breaks, if supported (No Blink) */
+            -ms-hyphens: auto;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            hyphens: auto;
+          
+          }
+    </style>
+       
+            <!-- <div class="wrapper" style="background-image: url('{% static 'roadmaps/images/fondo_home.jpg' %}');">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-6">
+                            <h1>asd</h1>
+                        </div>
+                        <div class="col-6">
+                            <h1>asd</h1>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+    <div class="wrapper" style="background-image: url('{% static 'roadmaps/images/fondo_home.jpg' %}');">
+        <header class="main-header h-100 py-5" >
+            <div class="background-overlay text-white py-5">
+            <div class="container py-2">
+                <div class="row d-flex h-100 py-5" style="height: 100%;">
+                <div class="col-sm-5 text-left justify-content-center align-self-center">
+                    <h1>
+                        Become a self-taught expert
+                    </h1>
+                    <p class="grey-text px-2">Start today</p>
+                    <a href="#" class="btn btn-secondary text-white btn-lg mr-2">
+                        Log in
+                    </a>
+                    <a href="#" class="btn btn-primary btn-lg mx-2">
+                        Sign Up
+                    </a>
+                </div>
+                <div class="col-sm-7">
+                    
+                </div>
+                </div>
+            </div>
+            </div>
+        </header>
+        <p style="color: antiquewhite; text-align: right; font-size: x-small; position: relative; top: 1.5em;">Photo by Mark Basarab @igniteedit - www.unsplash.com</p>
+
+        <main class="bg-white shadow-lg">
+            <div class="container">
+    
+                <!--Section: Best Features-->
+                <section id="best-features" class="text-center">
+    
+                    <!--Grid row-->
+                    <div class="row pt-4">
+    
+                        <!--Grid column-->
+                        <div class="col-md-4 my-1">
+                            <i class="fa fa-camera-retro fa-4x orange-text"></i>
+                            <h4 class="my-3 font-weight-bold">Just Start</h4>
+                            <p class="grey-text">Every single resource you need in one place, in a sequential order, with clear learning objectives. </p>
+                        </div>
+                        <!--Grid column-->
+    
+                        <!--Grid column-->
+                        <div class="col-md-4 my-1">
+                            <i class="fa fa-heart fa-4x orange-text"></i>
+                            <h4 class="my-3 font-weight-bold">Stay Accountable</h4>
+                            <p class="grey-text">Visualize how much you progress and stay accountable for all your achivements.</p>
+                        </div>
+                        <!--Grid column-->
+    
+                        <!--Grid column-->
+                        <div class="col-md-4 my-1">
+                            <i class="fa fa-bicycle fa-4x orange-text"></i>
+                            <h4 class="my-3 font-weight-bold">Constant Feedback</h4>
+                            <p class="grey-text">Take frequent quizzes on what you just learned and clear any doubts in the comments section.</p>
+                        </div>
+                        <!--Grid column-->
+    
+                    </div>
+                    <!--Grid row-->
+    
+                </section>
+                <!--Section: Best Features-->
+    
+                <hr class="my-5">
+            </div>
+        </main>
+        <!--Main layout-->
+    </div>
+    <div class="wrapper bg-light">    
+        <div class="container py-4 text-center">
+                
+                <h2 class="mt-5">Available Topics</h2>
+                
+                <div class="row py-4 px-md-4 px-lg-5">
+                    {% for topic in topic_list %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
+                                <img class="card-img-top" src="{% static 'roadmaps/images/comp_sci_thumbnail.jpg' %}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ topic.title }}
+                                        {% if topic.is_topic_new %}
+                                        <span class="badge badge-secondary">New</span></h1>
+                                        {% endif %}
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <h2 class="mt-5">Latest Roadmaps</h2>
+                <div class="container mb-5">
+                    {% for roadmap in roadmap_list %}
+                    
+                    <div class="row py-4 px-md-4 px-lg-5">
+                        <div class="col-12 mt-3" >
+                            <div class="card text-left" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
+                                <div class="card-horizontal" >
+                                    <div class="img-square-wrapper">
+                                        <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="200">
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title">{{ roadmap.title }}</h4>
+                                        <small class="text-muted"><p>Created by <a href="">{{ roadmap.owner.username }}</a></p></small>
+                                        <p class="card-text" id="dont-break-out">{{ roadmap.about|slice:":150"}}</p>
+                                        <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary mb-3">Go to roadmap</a>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Last updated {{ roadmap.updated_at|timesince }} ago.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                   
+                        
+                    {% endfor %}
+                        
+                </div>
+            
+            <div class="container">
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

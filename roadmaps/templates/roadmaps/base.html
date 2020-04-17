@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <style>
+      .striker{
+        text-decoration: line-through;
+      }
+    </style>
+    
+    <nav class="navbar navbar-expand-md navbar-light bg-dark shadow">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'roadmaps/images/logo.png' %}" width="30" height="30" alt="" style="position: relative; top: -3px;">
+            <span style="color: white;">Roadmapp</span>
+        </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#"><span style="color: white;">Create</span> <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span style="color: white;">Explore</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'roadmap_list' %}">Roadmaps</a>
+                  <a class="dropdown-item" href="{% url 'home' %}">Topics</a>
+                </div>
+              </li>
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span style="color: white;">Profile</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'home' %}">My profile</a>
+                  <a class="dropdown-item" href="{% url 'home' %}">My roadmaps</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'home' %}">Log out</a>
+                </div>
+              </li>
+              {% else %}
+              <li class="nav-item active">
+                <a class="nav-link" href="#"><span style="color: #042442;">Log in</span> <span class="sr-only">(current)</span></a>
+              </li>
+              {% endif %}
+            </ul>
+        </div>
+    </nav>
+  {% block content %}
+  {% endblock %}
+  {% block footer %}
+  <!-- Footer -->
+  <footer class="page-footer text-white font-small bg-dark" style="box-shadow: 0px -4px 5px grey;">
+
+    <!--Footer Links-->
+      <div class="container text-center text-md-left pt-4">
+          <div class="row mt-3">
+
+              <!--First column-->
+              <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+                  <h6 class="font-weight-bold">
+                      <img src="{% static 'roadmaps/images/logo.png' %}" width="30" height="30" alt="" style="position: relative; top: -3px;">
+                      <span style="color: white;">Roadmapp</span>
+                  </h6>
+                  <hr class="deep-purple accent-2 mb-1 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                  <p>Straight-forward, gap-less skill acquiring platform.</p>
+              </div>
+              <!--/.First column-->
+
+              <!--Second column-->
+              <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                  <h6 class="font-weight-bold pb-1">
+                      <span style="color: white;">Site</span>
+                  </h6>
+                  <div class="pl-2">
+                      <p>
+                          <a href="#!">About</a>
+                      </p>
+                      <p>
+                          <a href="#!">Roadmaps</a>
+                      </p>
+                      <p>
+                          <a href="#!">Topics</a>
+                      </p>
+                  </div>
+              </div>
+              <!--/.Second column-->
+
+              <!--Third column-->
+              <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                  <h6 class="font-weight-bold pb-1">
+                      <span style="color: white;">Connect</span>
+                  </h6>
+                  <div class="pl-2">
+                      <p>
+                          <a href="#!">Twitter</a>
+                      </p>
+                      <p>
+                          <a href="#!">Instagram</a>
+                      </p>
+                  </div>
+                  
+              </div>
+              <!--/.Third column-->
+
+              <!--Fourth column-->
+              <div class="col-md-4 col-lg-3 col-xl-3">
+                  <h6 class="font-weight-bold pb-1">
+                      <span style="color: rgb(243, 251, 255);">Contact</span>
+                  </h6>
+                  <div class="pl-2">
+                      <p>
+                          <a href="#!">Become an affiliate</a>
+                      </p>
+                      <p>
+                          <a href="#!">Feedback</a>
+                      </p>
+                      <p>
+                          <a href="#!">Work with us</a>
+                      </p>
+                  </div>
+                  
+              </div>
+              <!--/.Fourth column-->
+
+          </div>
+      </div>
+      <!--/.Footer Links-->
+  </footer>
+{% endblock %}
+</body>
+</html>
