@@ -16,7 +16,7 @@
                 </div>
             {% else %}
                 <div class="wrapper" style="display: inline;">
-                    {{ cim.item.title }} - <span class="text-muted">{{ cim.item.objectives }}</span>
+                    {% if cim.item.link %}<a href="{{ cim.item.link }}">{{ cim.item.title }}</a>{% else %}{{ cim.item.title }}{% endif %} - <span class="text-muted">{{ cim.item.objectives }}</span>
                 </div>
             {% endif %}
             {% if cim.children_item_memberships.count > 0 %}
