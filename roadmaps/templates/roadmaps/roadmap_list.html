@@ -1,7 +1,34 @@
 {% extends 'roadmaps/base.html' %}
 {% block title %}Roadmapp | Roadmaps{% endblock %}
 {% block content %}
-<div class="container mb-5">
+
+<style>
+    .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
+    }
+    #dont-break-out {
+
+        /* These are technically the same, but use both */
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      
+        -ms-word-break: break-all;
+        /* This is the dangerous one in WebKit, as it breaks things wherever */
+        word-break: break-all;
+        /* Instead use this non-standard one: */
+        word-break: break-word;
+      
+        /* Adds a hyphen where the word breaks, if supported (No Blink) */
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+      
+      }
+</style>
+
+<div class="container mb-5" style="min-height: 700px;">
     <div class="row">
         <div class="col-8 ml-auto mr-auto">
             {% for roadmap in roadmap_list %}
@@ -10,12 +37,12 @@
                     <div class="card text-left" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
                         <div class="card-horizontal" >
                             <div class="img-square-wrapper">
-                                <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="200">
+                                <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="210px" style="height: 210px; width: 200px; object-fit: cover;">
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">{{ roadmap.title }}</h4>
                                 <small class="text-muted"><p>Created by <a href="">{{ roadmap.owner.username }}</a></p></small>
-                                <p class="card-text" id="dont-break-out">{{ roadmap.about|slice:":150"}}</p>
+                                <p class="card-text" id="dont-break-out">{{ roadmap.objectives|slice:":50"}}...</p>
                                 <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary mb-3">Go to roadmap</a>
                             </div>
                         </div>

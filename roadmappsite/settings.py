@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'roadmaps.apps.RoadmapsConfig'
+    'roadmaps.apps.RoadmapsConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-MEDIA_URL =  'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'roadmap/media')
+MEDIA_URL =  '/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+

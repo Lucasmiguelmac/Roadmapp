@@ -1,11 +1,78 @@
 {% extends 'roadmaps/base.html' %}
-{% block title %}{{ unit.name }} | {{ unit.roadmap.title }}{% endblock %}
+{% block title %}{{ unit.title }} | {{ unit.roadmap.title }}{% endblock %}
 {% block content %}
+{% load make_tree %}
 
-<div class="wrapper bg-white" style="min-height: 400px;">
-    <div class="container">
-        <div class="row py-4 mb-5">
-            <div class="col-3 ml-auto">
+
+<div class="wrapper bg-light">
+    <div class="container" style="min-height: 400px;">
+        <div class="row py-4 pb-5">    
+            <div class="col-8 ml-auto mb-5">
+                <div class="row" id="roadmap_objectives">
+                    <div class="container">
+                        <p><a href="{% url 'roadmap_list' %}">Roadmaps</a> /
+                            {% if unit.roadmap.parent_roadmap %}... /{% endif %}
+                            <a href="{% url 'roadmap_detail' unit.roadmap.id %}">{{ unit.roadmap.title }}</a> /
+                            {{ unit.title }}
+                        </p>
+                    </div>
+                    <div class="container mt-2 mb-2">
+                        {% if start_roadmap_message %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>You are not a member of this Roadmap yet!</strong> Click "Join Roadmap" below to see this unit's content.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                            </div>
+                        <p>
+                            <form class="spacer float-left" action="{% url 'join_roadmap' unit.roadmap.id %}" method="post">
+                                {% csrf_token %}
+                                <input class="btn btn-secondary" type="submit" value="Join Roadmap"/>
+                            </form>
+                        {% else %}
+                            <a class="btn btn-secondary ml-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                Unit Objectives
+                            </a>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body text-muted">
+                                {{ unit.objectives }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12" >
+                    {% if not start_roadmap_message %}
+                        <div class="card bg-white shadow mt-3 p-2 pb-5">        
+                            {% for im in item_membership_list %}
+                                <div class="card-body">
+                                    <!-- Checkbox -->
+                                    <div class="custom-control custom-checkbox" style="display: inline-block;">
+                                        <form class="spacer float-left" action="{% url 'tick_checkbox' im.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="custom-control-input" type="checkbox" id="{{ im.item.id }}" {% if im.finished %}checked{% endif %} onChange="this.form.submit()">
+                                            <label class="custom-control-label" for="{{ im.item.id }}"></label>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Cuerpo de la carta -->
+                                    <h5 style="display: inline-block;">{{ im.item.title }}</h5>
+                                    <p class="text-muted">{{ im.item.objectives }}</p>
+                                    {% if im.item.children_items.count > 0 %}
+                                        {% make_tree im %}
+                                    {% endif %}                                
+                                </div>
+                            {% endfor %}
+                           
+                        </div>
+                    {% endif %} 
+                    </div>
+                    
+                </div>        
+            </div>
+            <div class="col-3 mr-auto">
                 <ul class="list-group shadow">
                     {% for roadmap_unit in unit_list %}
                         {% if roadmap_unit == unit %}
@@ -15,49 +82,6 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-            </div>
-            <div class="col-8 mr-auto mb-5">
-                <div class="row" id="roadmap_objectives">
-                    <div class="container mt-3">
-                        <h6 class="px-3 pb-2">{{ unit.about }}</h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12" >
-                        <div id="accordion">         
-                            {% for item in item_list %}
-                            <div class="card shadow">
-                                <div class="card-header bg-light" id="heading{{ item.id }}">
-                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ item.id }}" aria-expanded="true" aria-controls="collapseOne">
-                                      <h5 class="mb-0">{{ item.title }}</h5>
-                                    </button>
-                                    <div class="custom-control custom-checkbox float-right mt-2">
-                                        <input class="custom-control-input" type="checkbox" id="checkbox-1" checked="">
-                                        <label class="custom-control-label" for="checkbox-1"></label>
-                                    </div>   
-                                </div>
-    
-                                <div id="collapse{{ item.id }}" class="collapse " aria-labelledby="heading{{ item.id }}" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <strong>Objectives:</strong>
-                                        <div>
-                                            {{ item.objectives }}
-                                        </div>
-                                        {% if item.link %}
-                                            <a class="btn btn-primary mt-4" href="{{ item.link }}" role="button">Go to link</a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                            
-                        </div>
-                    </div>
-                    
-                </div>
-                        
-            
-                    
             </div>
         </div>
     </div>

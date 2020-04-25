@@ -1,0 +1,27 @@
+{% load make_tree %}
+<div class="pl-3 pr-2">
+    {% for cim in children_item_memberships %}
+        <hr>
+        <div class="">
+            <div class="custom-control custom-checkbox" style="display: inline;">
+                <form class="spacer" action="{% url 'tick_checkbox' cim.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input class="custom-control-input" type="checkbox" id="{{ cim.id }}" {% if cim.finished %}checked{% endif %} onChange="this.form.submit()">
+                    <label class="custom-control-label" for="{{ cim.id }}"></label>
+                </form>
+            </div>
+            {% if ci.link %}
+                <div class="wrapper" style="display: inline;">
+                    <a class="mr-1" href="{{ cim.item.link }}" role="button" data-toggle="tooltip" data-placement="bottom" title="Go to link">{{ cim.item.title }}</a>- <span class="text-muted">{{ cim.item.objectives }}</span>
+                </div>
+            {% else %}
+                <div class="wrapper" style="display: inline;">
+                    {{ cim.item.title }} - <span class="text-muted">{{ cim.item.objectives }}</span>
+                </div>
+            {% endif %}
+            {% if cim.children_item_memberships.count > 0 %}
+                {% make_tree cim %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

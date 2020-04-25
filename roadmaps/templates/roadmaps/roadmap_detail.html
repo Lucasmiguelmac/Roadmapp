@@ -5,11 +5,29 @@
     <header class="shadow bg-white">
         <div class="container">
             <div class="row">
-                <h1 class="text-dark col-12 pt-5 pb-3">{{ roadmap.title }}</h1>
+                <div class="col-12 pt-5 pb-0 text-dark"> 
+                    <div>
+                        <h1 style="display: inline-block;">{{ roadmap.title }}</h1>
+                        <span style="display: inline-block;">by <a href="#">{{ roadmap.owner }}</a></span> <!-- En el link sin completar iría el link al user -->
+                        {% if start_roadmap_message %}
+                            <form class="spacer" action="{% url 'join_roadmap' roadmap.id %}" method="post" style="display: inline-block;">
+                                {% csrf_token %}
+                                <input class="btn btn-primary ml-1 mb-3" type="submit" value="Join Roadmap"/>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p><a href="{% url 'roadmap_list' %}">Roadmaps</a> /
+                            {% if roadmap.parent_roadmap.parent_roadmap %}... /{% endif %}
+                            {% if roadmap.parent_roadmap %}<a href="{% url 'roadmap_detail' roadmap.parent_roadmap.id %}">{{ roadmap.parent_roadmap.title }}</a> /{% endif %}
+                            {{ roadmap.title }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
-    <div class=" py-5" style="min-height: 275px;">
+    <div class=" py-5">
         <div class="container-fluid">
             <div class="row mb-5" id="project_background">
                 <div class="col-2 ml-auto " id="section_title">
@@ -63,35 +81,49 @@
             <div class="row mb-5" id="project_units">
                 <div class="col-2 ml-auto" id="section_title">
                     <hr class="mb-0 shadow dark mr-0" style="border: 2px solid rgb(177, 177, 177); border-radius: 2px; width: 5em;">
-                    <h2 class="pt-0 mt-0 pl-2 text-right mr-1">Units</h2>
-                    
-                    
+                    <h2 class="pt-0 mt-0 pl-2 text-right mr-1">Units</h2>   
                 </div>
                 <div class="col-6 mr-auto pt-4" id="units">
-                
-                    <ul class="list-group shadow">
-                        {% for unit in unit_list %}
-                            <a href="{% url 'unit_detail' unit.id %}">
-                                <li class="list-group-item pt-3 pl-5">
-                                    <div class="custom-control custom-checkbox float-right mt-1">
+                    <div class="shadow" id="accordion">
+                        {% for unit in unit_list %} <!-- unit: unit o roadmap -->
+                            {% if unit.model_name == 'unit' %}
+                                <!-- <a href="{% url 'unit_detail' unit.id %}"> -->
+                                        <div class="card">
+                                            <div class="card-header bg-white" id="headingOne">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                                                        aria-controls="collapseOne">
+                                                        <h5 class="pl-1 pt-1">{{ unit }}</h5>
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <h5>Objectives</h5>
+                                                    <p>{{ unit.objectives }}</p>
+                                                    <a class="btn btn-primary mt-4" href="{% url 'unit_detail' unit.id %}" role="button">Go to Unit</a>
+                                                    <a class="btn btn-primary mt-4" href="{% url 'unit_detail' unit.id %}" role="button">Mark as Finished</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                            {% else %}
+                                <!-- Lo que pasa para los roadmaps: una card sin acordión -->
+                                <div class="card-header bg-white" id="heading{{ item.id }}">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ item.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="{% url 'roadmap_detail' unit.id %}"><h5 class="mb-0">{{ unit }}</h5><a href="{% url 'roadmap_detail' unit.id %}"></a>
+                                    </button>
+                                    <!-- Éste el checkbox a modificar -->
+                                    <!-- <div class="custom-control custom-checkbox float-right mt-2">
                                         <input class="custom-control-input" type="checkbox" id="checkbox-1" checked="">
-                                        <label class="custom-control-label" for="checkbox-1">
-                                    </div>
-                                        <h4>{{ unit }}</h4>
-                                    </label>
-                                </li>
-                            </a>
+                                        <label class="custom-control-label" for="checkbox-1"></label>
+                                    </div>    -->
+                                </div>
+                            {% endif %}
                         {% endfor %}
-                    </ul>
+                    </div>        
                 </div>
             </div>
-                
-
-                <!-- <div class="col-2">
-                    Roadmaps relacionados/ads
-                </div> -->
-
-            
         </div>
     </div>
 </div>

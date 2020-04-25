@@ -4,6 +4,18 @@
     {% load static %}
 
     <style>
+        .bg {
+            /* The image used */
+            background-image: url("img_girl.jpg");
+          
+            /* Full height */
+            
+          
+            /* Center and scale the image nicely */
+            background-position:unset
+            background-repeat: no-repeat;
+            background-size: cover;
+        
         .card-horizontal {
             display: flex;
             flex: 1 1 auto;
@@ -42,23 +54,23 @@
                 </div>
             </div> -->
 
-    <div class="wrapper" style="background-image: url('{% static 'roadmaps/images/fondo_home.jpg' %}');">
+    <div class="bg" style="position:sticky; min-width: 100%; min-width: 100vh; background-image: url('{% static 'roadmaps/images/fondo_home.jpg' %}');">
         <header class="main-header h-100 py-5" >
             <div class="background-overlay text-white py-5">
             <div class="container py-2">
                 <div class="row d-flex h-100 py-5" style="height: 100%;">
-                <div class="col-sm-5 text-left justify-content-center align-self-center">
-                    <h1>
-                        Become a self-taught expert
-                    </h1>
-                    <p class="grey-text px-2">Start today</p>
-                    <a href="#" class="btn btn-secondary text-white btn-lg mr-2">
-                        Log in
-                    </a>
-                    <a href="#" class="btn btn-primary btn-lg mx-2">
-                        Sign Up
-                    </a>
-                </div>
+                    <div class="col-12 col-sm-10 col-md-7 col-lg-5 text-left justify-content-center align-self-center">
+                        <h1>
+                            Become a self-taught expert
+                        </h1>
+                        <p class="grey-text ml-2 mt-2 mb-2">Start today</p>
+                        <a href="#" class="btn btn-secondary btn-lg mr-2">
+                            Log in
+                        </a>
+                        <a href="#" class="btn btn-primary btn-lg mx-2">
+                            Sign Up
+                        </a>
+                    </div>
                 <div class="col-sm-7">
                     
                 </div>
@@ -120,8 +132,8 @@
                 <div class="row py-4 px-md-4 px-lg-5">
                     {% for topic in topic_list %}
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                            <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
-                                <img class="card-img-top" src="{% static 'roadmaps/images/comp_sci_thumbnail.jpg' %}" alt="Card image cap">
+                            <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px; min-height:230px;">
+                                <img class="card-img-top" src="{{ topic.image.url }}" alt="Card image cap" style="height: 210px; max-width: auto; object-fit: cover;">
                                 <div class="card-body">
                                     <h4 class="card-title">{{ topic.title }}
                                         {% if topic.is_topic_new %}
@@ -143,12 +155,12 @@
                             <div class="card text-left" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); text-align: center; background-color: white; border-radius: 5px">
                                 <div class="card-horizontal" >
                                     <div class="img-square-wrapper">
-                                        <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="200">
+                                        <img class="" src="{{ roadmap.image.url }}" alt="Card image cap" height="200px" style="height: 300px; width: 300px; object-fit: cover;">
                                     </div>
                                     <div class="card-body">
                                         <h4 class="card-title">{{ roadmap.title }}</h4>
                                         <small class="text-muted"><p>Created by <a href="">{{ roadmap.owner.username }}</a></p></small>
-                                        <p class="card-text" id="dont-break-out">{{ roadmap.about|slice:":150"}}</p>
+                                        <p class="card-text" id="dont-break-out">{{ roadmap.objectives|slice:":150"}}</p>
                                         <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary mb-3">Go to roadmap</a>
                                     </div>
                                 </div>
