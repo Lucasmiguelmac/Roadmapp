@@ -47,7 +47,7 @@ class RoadmapDetailView(DetailView):
         qs = sorted(
             queryset_chain,
             key=lambda instance: instance.place,
-            reverse=False
+            reverse=True
         )
         self.count = len(qs)
         context['unit_list']= qs
