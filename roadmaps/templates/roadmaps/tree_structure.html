@@ -10,7 +10,7 @@
                     <label class="custom-control-label" for="{{ cim.id }}"></label>
                 </form>
             </div>
-            {% if ci.link %}
+            {% if cim.item.link %}
                 <div class="wrapper" style="display: inline;">
                     <a class="mr-1" href="{{ cim.item.link }}" role="button" data-toggle="tooltip" data-placement="bottom" title="Go to link">{{ cim.item.title }}</a>- <span class="text-muted">{{ cim.item.objectives }}</span>
                 </div>
