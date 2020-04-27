@@ -8,7 +8,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1f)9s)0ca6lfny2-d-y(u8_ms)1%6o4d_c6v=jysnuri#55550'
+# SECRET_KEY = '1f)9s)0ca6lfny2-d-y(u8_ms)1%6o4d_c6v=jysnuri#55550'
+#Agreamos la nueva que es la que está en nuestra env variable y en la env variable de heroku
+SECRET_KEY=os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
