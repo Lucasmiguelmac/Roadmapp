@@ -1,3 +1,4 @@
+import django_heroku
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -134,3 +135,5 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_FILE_OVERWRITE = False #Para que uno o mas users puedan subir un archvo con el mismo nombre
 AWS_DEFAULT_ACL = None #Supuestamente hay que indicar que éste valor es None por un problema que surgía con django-storages, no sé si lo solucionaron todavía así que todavía lo pongo
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+django_heroku.settings(locals())
