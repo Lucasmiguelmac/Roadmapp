@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 
 class Topic(models.Model):
@@ -61,6 +62,10 @@ class Roadmap(models.Model):
             return "Unit " + str(self.place) +" | " + self.title
         return self.title
 
+    #No probé si anda todavía    
+    def get_absolute_url(self):
+        return reverse('roadmap_detail', args=[str(self.id)])
+
 class Unit(models.Model):
     roadmap = models.ForeignKey(
         Roadmap,
@@ -89,6 +94,9 @@ class Unit(models.Model):
 
     def __str__(self):
         return "Unit " + str(self.place) +" | " + self.title
+
+    def get_absolute_url(self):
+        return reverse('unit_detail', args=[str(self.id)])
 
 
 class Item(models.Model):

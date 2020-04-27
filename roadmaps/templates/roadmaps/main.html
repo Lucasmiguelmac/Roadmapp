@@ -148,7 +148,7 @@
                                         <h4 class="card-title">{{ roadmap.title }}</h4>
                                         <small class="text-muted"><p>Created by <a href="">{{ roadmap.owner.username }}</a></p></small>
                                         <p class="card-text" id="dont-break-out">{{ roadmap.objectives|slice:":150"}}</p>
-                                        <a href="{% url 'roadmap_detail' roadmap.id %}" class="btn btn-primary mb-3">Go to roadmap</a>
+                                        <a href="{{ roadmap.get_absolute_url }}" class="btn btn-primary mb-3">Go to roadmap</a>
                                     </div>
                                 </div>
                                 <div class="card-footer">
