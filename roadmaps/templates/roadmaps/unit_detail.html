@@ -58,7 +58,7 @@
                                     </div>
                                     
                                     <!-- Cuerpo de la carta -->
-                                    <h5 style="display: inline-block;">{{ im.item.title }}</h5>
+                                    <h5 style="display: inline-block;">{% if im.item.link %}<a href="{{ im.item.link }}">{{ im.item.title }}</a>{% else %}{{ im.item.title }}{% endif %}</h5>
                                     <p class="text-muted">{{ im.item.objectives }}</p>
                                     {% if im.item.children_items.count > 0 %}
                                         {% make_tree im %}
