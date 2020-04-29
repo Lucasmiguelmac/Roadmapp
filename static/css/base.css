@@ -8,9 +8,5 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 55vh;
-}
-    
-.striker{
-    text-decoration: line-through;
+    height: 15em;
 }

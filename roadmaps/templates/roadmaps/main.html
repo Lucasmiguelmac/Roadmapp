@@ -1,5 +1,5 @@
 {% extends 'roadmaps/base.html' %}
-{% block title %}Roadmapp | Home{% endblock %}
+{% block title %}Roadmapp{% endblock %}
 {% block content %}
     {% load static %}
 
@@ -50,12 +50,12 @@
                         <h1>
                             Become a self-taught expert
                         </h1>
-                        <p class="grey-text ml-2 mt-2 mb-2">Start today</p>
-                        <a href="#" class="btn btn-secondary btn-lg mr-2">
+                        <p class="ml-2 mt-2 mb-2" style="color: rgb(255, 255, 255);">Start today</p>
+                        <a href="{% url 'login' %}" class="btn btn-secondary btn-lg mr-2">
                             Log in
                         </a>
-                        <a href="#" class="btn btn-primary btn-lg mx-2">
-                            Sign Up
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg mx-2">
+                            Register
                         </a>
                     </div>
                 <div class="col-sm-7">
@@ -69,15 +69,14 @@
 
         <main class="bg-white shadow-lg">
             <div class="container">
-    
                 <!--Section: Best Features-->
-                <section id="best-features" class="text-center">
+                <div id="best-features" class="text-center">
     
                     <!--Grid row-->
                     <div class="row pt-4">
     
                         <!--Grid column-->
-                        <div class="col-md-4 my-1">
+                        <div class="col-md-4 py-1">
                             <i class="fa fa-camera-retro fa-4x orange-text"></i>
                             <h4 class="my-3 font-weight-bold">Just Start</h4>
                             <p class="grey-text">Every single resource you need in one place, in a sequential order, with clear learning objectives. </p>
@@ -85,7 +84,7 @@
                         <!--Grid column-->
     
                         <!--Grid column-->
-                        <div class="col-md-4 my-1">
+                        <div class="col-md-4 py-1">
                             <i class="fa fa-heart fa-4x orange-text"></i>
                             <h4 class="my-3 font-weight-bold">Stay Accountable</h4>
                             <p class="grey-text">Visualize how much you progress and stay accountable for all your achivements.</p>
@@ -93,7 +92,7 @@
                         <!--Grid column-->
     
                         <!--Grid column-->
-                        <div class="col-md-4 my-1">
+                        <div class="col-md-4 py-1">
                             <i class="fa fa-bicycle fa-4x orange-text"></i>
                             <h4 class="my-3 font-weight-bold">Constant Feedback</h4>
                             <p class="grey-text">Take frequent quizzes on what you just learned and clear any doubts in the comments section.</p>
@@ -103,7 +102,7 @@
                     </div>
                     <!--Grid row-->
     
-                </section>
+                </div>
                 <!--Section: Best Features-->
     
                 <hr class="my-5">
@@ -111,10 +110,10 @@
         </main>
         <!--Main layout-->
     </div>
-    <div class="wrapper bg-light">    
+    <div class="wrapper bg-light pt-4">    
         <div class="container py-4 text-center">
                 
-                <h2 class="mt-5">Available Topics</h2>
+                <h2>Available Topics</h2>
                 
                 <div class="row py-4 px-md-4 px-lg-5">
                     {% for topic in topic_list %}

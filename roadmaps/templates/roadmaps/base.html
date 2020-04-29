@@ -20,7 +20,7 @@
 
 
     <nav class="navbar navbar-expand-md navbar-light bg-dark shadow">
-        <a class="navbar-brand" href="{% url 'home' %}">
+        <a class="navbar-brand" href="{% url 'main' %}">
             <img src="{% static 'images/logo.png' %}" width="30" height="30" alt="" style="position: relative; top: -3px;">
             <span style="color: white;">Roadmapp</span>
         </a>
@@ -34,35 +34,40 @@
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#"><span style="color: white;">Create</span> <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span style="color: white;">Explore</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'roadmap_list' %}">Roadmaps</a>
-                  <a class="dropdown-item" href="{% url 'home' %}">Topics</a>
-                </div>
-              </li>
-              {% if user.is_authenticated %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span style="color: white;">Profile</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'home' %}">My profile</a>
-                  <a class="dropdown-item" href="{% url 'home' %}">My roadmaps</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'home' %}">Log out</a>
-                </div>
-              </li>
-              {% else %}
-              <li class="nav-item active">
-                <a class="nav-link" href="#"><span style="color: #042442;">Log in</span> <span class="sr-only">(current)</span></a>
-              </li>
-              {% endif %}
+                {% if not user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'register' %}"><span style="color: white;">Register</span> <span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"><span style="color: white;">Create</span> <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span style="color: white;">Explore</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'roadmap_list' %}">Roadmaps</a>
+                    <a class="dropdown-item" href="{% url 'main' %}">Topics</a>
+                    </div>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span style="color: white;">Profile</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'main' %}">My profile</a>
+                    <a class="dropdown-item" href="{% url 'main' %}">My roadmaps</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'login' %}"><span style="color: white;">Login</span> <span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -70,7 +75,7 @@
   {% endblock %}
   {% block footer %}
   <!-- Footer -->
-  <footer class="page-footer text-white font-small bg-dark" style="box-shadow: 0px -4px 5px grey; position: relative; min-height 10%; min-height: 10vh;">
+  <footer class="page-footer text-white font-small bg-dark" style="box-shadow: 0px -4px 5px grey; position: relative;">
 
     <!--Footer Links-->
       <div class="container text-center text-md-left pt-4">

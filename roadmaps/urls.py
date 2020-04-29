@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import HomeView, RoadmapListView, RoadmapDetailView, UnitDetailView, JoinRoadmapView, TickCheckbox
+from .views import HomeView, MainView, RoadmapListView, RoadmapDetailView, UnitDetailView, JoinRoadmapView, TickCheckbox
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
+    path('home', HomeView.as_view(), name='home'),
+    path('', MainView.as_view(), name='main'),
     path('roadmaps/', RoadmapListView.as_view(), name='roadmap_list'),
     path('roadmaps/<int:pk>', RoadmapDetailView.as_view(), name='roadmap_detail'),
     path('unit/<int:pk>', UnitDetailView.as_view(), name='unit_detail'),

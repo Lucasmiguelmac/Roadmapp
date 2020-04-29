@@ -2,12 +2,16 @@ from django import forms
 from itertools import chain
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from .owner import OwnerCreateView, OwnerDeleteView, OwnerDetailView, OwnerListView, OwnerUpdateView
 from .models import Roadmap, Topic, Item, Unit, RoadmapMembership, UnitMembership, ItemMembership
 
 # Create your views here.
-class HomeView(ListView):
+class HomeView(View):
+    pass #Hacer profil view acá
+
+
+class MainView(ListView):
     """
     Pasa un queryset que son los últimos 3 tracks que se hicieron y otro que son todos los topics.
     """
@@ -180,3 +184,5 @@ class TickCheckbox(View):
             item_membership.save()
 
         return redirect('unit_detail', pk=item_membership.item.unit.id)
+
+

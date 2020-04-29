@@ -1,0 +1,38 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}Login | Roadmapp{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="wrapper bg-light">
+    <div class="container">
+        <div class="row pb-5 pt-3">
+            <div class="col-6 mx-auto my-5">
+                <div class="card p-4 shadow">
+                    <div class="card-body p5 text-dark">
+                        <h2 class="text-center">Login</h2>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <p>
+                                    {{ field|as_crispy_field }}
+                                </p>
+                            {% endfor %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-warning pb-1 px-3" role="alert">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mx-auto" id="login-or-signup">
+                                <button class="btn btn-primary mr-2" type="submit">Login</button>
+                                Don't have an account? <a href="{% url 'register' %}">Register</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

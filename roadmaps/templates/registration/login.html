@@ -1,0 +1,24 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}Roadmapp | Login{% endblock %}
+{% block content %}
+{% load static %}
+
+    <div class="wrapper bg-light"></div>
+    <div class="container">
+        <div class="row mt-5 p-5 mb-auto">
+            <div class="col-4 m-auto">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3>Login</h3>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn btn-primary" type="submit">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
