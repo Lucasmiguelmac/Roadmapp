@@ -19,10 +19,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-#Sendgrid API Config
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-SENDGRID_SANDBOX_MODE_IN_DEBUG=True
+# #Sendgrid API Config
+# EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+# SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+# SENDGRID_SANDBOX_MODE_IN_DEBUG=True
 
 
 INSTALLED_APPS = [
@@ -149,3 +149,11 @@ AWS_DEFAULT_ACL = None #Supuestamente hay que indicar que éste valor es None po
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lucas.roadmapp@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') #La contraseña que obtuvimos de la configuración de nuestra cuenta en google
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Roadmapp Team <lucas.roadmapp@gmail.com>'
