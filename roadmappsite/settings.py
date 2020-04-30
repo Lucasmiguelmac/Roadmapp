@@ -8,9 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '1f)9s)0ca6lfny2-d-y(u8_ms)1%6o4d_c6v=jysnuri#55550'
-#Agreamos la nueva que es la que está en nuestra env variable y en la env variable de heroku
+#Agregamos la nueva key que es la que está en nuestra env variable y en la env variable de heroku (en el video de corey schafer nos dice como generarla)
 SECRET_KEY=os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -21,14 +19,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-#SMTP Config
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+#Sendgrid API Config
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SENDGRID_SANDBOX_MODE_IN_DEBUG=True
 
 
 INSTALLED_APPS = [
