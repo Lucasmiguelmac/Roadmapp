@@ -19,10 +19,16 @@ DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
+#SMTP Config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'lucasmiguelmac@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -31,6 +37,7 @@ INSTALLED_APPS = [
     'roadmaps.apps.RoadmapsConfig',
     'storages',
     'account',
+    'django.contrib.admin', #Pongo ésto abajo de la app account así se renderizan en primer lugar mis templates y en segundo la templates de admin (en caso de que el url tenga el mismo nombre)
     'crispy_forms',
 ]
 

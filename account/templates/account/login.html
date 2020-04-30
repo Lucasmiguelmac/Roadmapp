@@ -2,12 +2,12 @@
 {% block title %}Login | Roadmapp{% endblock %}
 {% block content %}
 {% load crispy_forms_tags %}
-<div class="wrapper bg-light">
+<div class="wrapper bg-light" style="min-height: 750px;" >
     <div class="container">
         <div class="row pb-5 pt-3">
-            <div class="col-6 mx-auto my-5">
+            <div class="col-12 col-sm-10 col-md-9 col-lg-7 col-xl-6 mx-auto my-5">
                 <div class="card p-4 shadow">
-                    <div class="card-body p5 text-dark">
+                    <div class="card-body p-2 text-dark">
                         <h2 class="text-center">Login</h2>
                         <form method="POST">
                             {% csrf_token %}
@@ -24,10 +24,12 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
+                            <p class="pt-1"><a href="{% url 'password_reset' %}">Forgot my password</a></p>
                             <div class="mx-auto" id="login-or-signup">
                                 <button class="btn btn-primary mr-2" type="submit">Login</button>
                                 Don't have an account? <a href="{% url 'register' %}">Register</a>
                             </div>
+                            
                         </form>
                     </div>
                 </div>

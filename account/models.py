@@ -57,3 +57,13 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
     
+class Profile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    # profession = models.CharField(max_length=200, blank=True, null=True)
+    # location = models.CharField(max_length=300, blank=True, null=True)
+    # birthdate = models.DateField() #Ver si puedo usar fecha o Django
+    # bio = models.CharField(max_length=450, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username + '\'s profile'
+    
