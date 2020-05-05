@@ -2,32 +2,31 @@ from django import forms
 from itertools import chain
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, View, TemplateView
 from .owner import OwnerCreateView, OwnerDeleteView, OwnerDetailView, OwnerListView, OwnerUpdateView
 from .models import Roadmap, Topic, Item, Unit, RoadmapMembership, UnitMembership, ItemMembership
 
 # Create your views here.
-class HomeView(View):
-    pass #Hacer profil view acá
+class RedirectView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('account', pk=request.user.id)
+        else:
+            return redirect('main')
 
 
-class MainView(ListView):
+
+class MainView(View):
     """
     Pasa un queryset que son los últimos 3 tracks que se hicieron y otro que son todos los topics.
     """
-    model = Topic
-    fields = '__all__'
-    template_name = 'roadmaps/main.html'
-    
-    # Le agrego al context que se pasa a la template el queryset tambén de Roadmaps
-    # https://docs.djangoproject.com/en/3.0/topics/class-based-views/generic-display/#adding-extra-context
-    def get_context_data(self, **kwargs):
-        # obtenemos el contexto que iba a ser originalmente pasado a nuestra template
-        context = super().get_context_data(**kwargs)
-        # agregamos el queryset de roadmaps filtrado
-        # https://docs.djangoproject.com/en/3.0/topics/db/queries/#limiting-querysets
-        context['roadmap_list'] = Roadmap.objects.order_by('created_at')[0:4]
-        return context
+
+    def get(self, request):      
+        context = {}
+        template_name = 'roadmaps/main.html'
+        context['topic_list'] = Topic.objects.order_by('created_at') # https://docs.djangoproject.com/en/3.0/topics/class-based-views/generic-display/#adding-extra-context
+        context['roadmap_list'] = Roadmap.objects.order_by('created_at')[0:4] # https://docs.djangoproject.com/en/3.0/topics/db/queries/#limiting-querysets
+        return render(request, template_name, context)
 
 class RoadmapListView(ListView):
     model = Roadmap
@@ -39,6 +38,10 @@ class RoadmapDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        #Agregamos ésto para ver qué roadmap fué el último visitado por el dueño de la session
+        last_seen = self.request.session.get('last_seen', Roadmap.objects.filter(id=self.kwargs['pk'])) #Creamos un last_seen si no lo hay
+        request.session['last_seen'] = Roadmap.objects.filter(id=self.kwargs['pk']) #Modificamos el last_seen por el que el user está viendo ahora si lo hay
         
         #Pasamos un queryset que sea mezcla de Units y Roadmaps
         unit_results = Unit.objects.filter(roadmap_id=self.kwargs['pk'])
@@ -85,6 +88,11 @@ class UnitDetailView(DetailView):
     model = Unit
     fields = '__all__'
     def get_context_data(self, **kwargs):
+
+        #Funcionalidad last seem
+        last_seen = self.request.session.get('last_seen', Unit.objects.filter(id=self.kwargs['pk'])) #Creamos un last_seen si no lo hay
+        request.session['last_seen'] =  Unit.objects.filter(id=self.kwargs['pk']) #Modificamos el last_seen por el que el user está viendo ahora si ya hay un last_seen
+
         # Separo al context para agregarle lo que quiera
         context = super().get_context_data(**kwargs)
         # Le agrego al context dos querysets ordenados 

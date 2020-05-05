@@ -4,14 +4,18 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path,include
 
-from account.views import registration_view, logout_view, login_view
+from roadmaps.views import RedirectView
+from account.views import AccountDetailView, registration_view, logout_view, login_view
 
 urlpatterns = [
 
+
+    path('', RedirectView.as_view(), name='home'),
+    path('profile/<int:pk>', AccountDetailView.as_view(), name='account'),
     path('admin/', admin.site.urls),
     path('register/', registration_view, name='register'),
     path('logout/', logout_view, name='logout'),
-    path('login/', login_view.as_view(), name='login'),
+    path('login/', login_view.as_view(redirect_authenticated_user=True), name='login'),
     path('', include('roadmaps.urls')),
 
     #Links para resetear la contraseña (es la funcionalidad default de Django pero sin el accounts/ en el url)

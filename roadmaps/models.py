@@ -22,12 +22,22 @@ class Topic(models.Model):
     def __str__(self):
         return self.title
 
+class Tag(models.Model):
+    title = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.title
+    
+
+
 class Roadmap(models.Model):
     parent_roadmap = models.ForeignKey(
         "self", on_delete=models.CASCADE, blank=True, null=True, related_name="children_roadmaps"
     )
     place = models.IntegerField(null=True, blank=True)
-    topic = models.ManyToManyField(Topic, related_name='roadmaps')
+    topics = models.ManyToManyField(Topic, related_name='roadmaps')
+    tags = models.ManyToManyField(Tag, through='RoadmapTagRelationship')
+
     roadmap_members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='roadmaps',
@@ -54,6 +64,23 @@ class Roadmap(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    #Acá diseñamos las choices PARA PRIVACY
+    PRIVATE = 'PR'
+    HIDDEN = 'HI'
+    PUBLIC = 'PU'
+    PRIVACY_CHOICES = [
+        (PRIVATE, 'Private'),
+        (HIDDEN, 'Hidden'),
+        (PUBLIC, 'Public'),
+    ]
+
+    privacy = models.CharField(
+        max_length=2,
+        choices=PRIVACY_CHOICES,
+        default=PUBLIC,
+    )
+
+
     def model_name(self):
         return self._meta.model_name
     
@@ -75,7 +102,7 @@ class Unit(models.Model):
         related_name="units" # Como se llama la columna de las Unit en la tabla Roadmap
     )
     unit_members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL, #Referenciamos nuestro user model
         related_name='units',
         through='UnitMembership',
     )
@@ -128,6 +155,20 @@ class Item(models.Model):
     def __str__(self):
         return self.title
 
+
+#Tabla joint de un tag conun roadmap
+class RoadmapTagRelationship(models.Model):
+    """
+    hacemos ésta tabla para lograr un query que matchée un interés de un user/tag con un roadmap.
+    """
+    roadmap = models.ForeignKey(Roadmap, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.roadmap + ' - ' + self.tag
+    
 
     
 # Tabla Joint de Miembros    

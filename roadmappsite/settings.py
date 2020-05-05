@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'account',
     'django.contrib.admin', #Pongo ésto abajo de la app account así se renderizan en primer lugar mis templates y en segundo la templates de admin (en caso de que el url tenga el mismo nombre)
     'crispy_forms',
+    'django_countries',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -150,9 +151,6 @@ AWS_DEFAULT_ACL = None #Supuestamente hay que indicar que éste valor es None po
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

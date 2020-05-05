@@ -1,9 +1,22 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm#, UserChangeForm
 from django.contrib.auth import authenticate
 
 
-from account.models import Account
+from account.models import Account, Profile
+
+
+class ProfileForm(forms.ModelForm):
+    password_check = forms.CharField(
+        label='Your password',
+        widget=forms.PasswordInput,
+        help_text='Introduce your password to save changes.'
+    )
+    
+    class Meta:
+        model = Profile
+        fields = ['profile_pic', 'bio', 'profession', 'interests', 'country']  
+
 
 class RegistrationForm(UserCreationForm): #Extiende a usercreationform
     email = forms.EmailField(max_length=60, help_text='Required. Add a valid email address')

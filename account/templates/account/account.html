@@ -1,0 +1,345 @@
+{% extends 'roadmaps/base.html' %}
+{% block title %}Roadmapp | @{{ account.username }} {% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+
+<style>
+    html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+</style>
+<!-- Script para íconos -->
+<script src="https://kit.fontawesome.com/f2492bc542.js" crossorigin="anonymous"></script>
+<!-- Script para search menu -->
+
+
+<body class="w3-theme-l5">
+
+
+<style>
+    .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
+    }
+    #dont-break-out {
+
+        /* These are technically the same, but use both */
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      
+        -ms-word-break: break-all;
+        /* This is the dangerous one in WebKit, as it breaks things wherever */
+        word-break: break-all;
+        /* Instead use this non-standard one: */
+        word-break: break-word;
+      
+        /* Adds a hyphen where the word breaks, if supported (No Blink) */
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+      }
+</style>
+
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:40px">    
+    <!-- The Grid -->
+    <div class="w3-row">
+
+      <!-- Left Column -->
+      <div class="w3-col m3">
+        <!-- Profile -->
+        <div class="w3-card w3-round w3-white">
+          <div class="w3-container align-self-center text-dark">
+            <p class="w3-center"><img src="{{ account.profile.profile_pic.url }}" class="w3-circle mt-4" style="height:106px;width:106px" alt="Avatar"></p>
+            <h4 class="w3-center">@{{ account.username }}</h4>
+            {% if account.profile.bio %}
+              <i class="px-3">{{ account.profile.bio }}</i>
+            {% endif %}
+            <hr>
+            {% if account.profile.profession %}
+            <div class="container d-flex h-100 pb-2">
+              <span class="material-icons pr-1">work</span>{{ account.profile.profession }}
+            </div>
+            {% endif %}
+            {% if account.profile.country %}
+            <div class="container d-flex h-100 pb-2">
+              <span class="material-icons pr-1">home</span>{{account.profile.country.name }}
+            </div>
+            {% endif %}
+            {% if account.profile.social_networks %}
+              <div class="container d-flex h-100 pb-2">
+                <span class="material-icons pr-1">people_alt</span>Connect:
+              </div>
+              <div class="container d-flex h-100 px-5 text-info pb-1">
+              <p>
+                {% if account.profile.social_networks.whatsapp_number %}
+                  <a href="https://wa.me/<{{ account.profile.social_networks.whatsapp_number }}>" class="whatsapp-ic" role="button"><i class="fab fa-lg fa-whatsapp"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.telegram_username %}
+                  <a href="https://t.me/[{account.profile.social_networks.telegram_username}]"><i class="fa fa-telegram" aria-hidden="true"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.personal_site %}
+                  <a href="{{ account.profile.social_networks.personal_site }}"><span class="material-icons">business_center</span></a>
+                {% endif %}
+                {% if account.profile.social_networks.linkedin_profile %}
+                  <a href="{{ account.profile.social_networks.linkedin_profile }}" class="li-ic mr-3" role="button"><i class="fab fa-lg fa-linkedin-in"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.github_profile %}
+                  <a href="{{ account.profile.social_networks.github_profile }}" class="git-ic mr-3" role="button"><i class="fab fa-lg fa-github"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.twitter_username %}
+                  <a href="https://twitter.com/{{ account.profile.social_networks.twitter_username }}/" class="tw-ic mr-3" role="button"><i class="fab fa-lg fa-twitter"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.instagram_username %}
+                  <a href="https://www.instagram.com/{{ account.profile.social_networks.instagram_username }}/" class="ins-ic mr-3" role="button"><i class="fab fa-lg fa-instagram"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.blog %}
+                  <a href="{{ account.profile.social_networks.blog }}">
+                    <svg class="bi bi-blockquote-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M2 3.5a.5.5 0 01.5-.5h11a.5.5 0 010 1h-11a.5.5 0 01-.5-.5zm5 3a.5.5 0 01.5-.5h6a.5.5 0 010 1h-6a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h6a.5.5 0 010 1h-6a.5.5 0 01-.5-.5zm-5 3a.5.5 0 01.5-.5h11a.5.5 0 010 1h-11a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
+                      <path d="M3.734 6.352a6.586 6.586 0 00-.445.275 1.94 1.94 0 00-.346.299 1.38 1.38 0 00-.252.369c-.058.129-.1.295-.123.498h.282c.242 0 .431.06.568.182.14.117.21.29.21.521a.697.697 0 01-.187.463c-.12.14-.289.21-.503.21-.336 0-.577-.108-.721-.327C2.072 8.619 2 8.328 2 7.969c0-.254.055-.485.164-.692.11-.21.242-.398.398-.562.16-.168.33-.31.51-.428.18-.117.33-.213.451-.287l.211.352zm2.168 0a6.588 6.588 0 00-.445.275 1.94 1.94 0 00-.346.299c-.113.12-.199.246-.257.375a1.75 1.75 0 00-.118.492h.282c.242 0 .431.06.568.182.14.117.21.29.21.521a.697.697 0 01-.187.463c-.12.14-.289.21-.504.21-.335 0-.576-.108-.72-.327-.145-.223-.217-.514-.217-.873 0-.254.055-.485.164-.692.11-.21.242-.398.398-.562.16-.168.33-.31.51-.428.18-.117.33-.213.451-.287l.211.352z"/>
+                    </svg>
+                  </a>
+                {% endif %}
+                {% if account.profile.social_networks.youtube_channel %}
+                  <a href="{{ account.profile.social_networks.youtube_channel }}" class="yt-ic mr-3" role="button"><i class="fab fa-lg fa-youtube"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.stackoverflow_profile %}
+                  <a href="{{ account.profile.social_networks.stackoverflow_profile }}" class="so-ic mr-3" role="button"><i class="fab fa-lg fa-stack-overflow"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.reddit_username %}
+                  <a href="https://www.reddit.com/user/{{ account.profile.social_networks.reddit_username }}/" class="reddit-ic mr-3" role="button"><i class="fab fa-lg fa-reddit-alien"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.facebook_profile %}
+                  <a href="{{ account.profile.social_networks.facebook_profile }}" class="fb-ic mr-3" role="button"><i class="fab fa-lg fa-facebook-f"></i></a>
+                {% endif %}
+                {% if account.profile.social_networks.show_email %}
+                <a href="mailto:{{ account.email }}" class="email-ic mr-3" role="button"><i class="far fa-lg fa-envelope"></i></a>
+                {% endif %}
+              </p>
+              </div>
+            {% endif %}
+            {% if user == account %}
+            <!-- Edit Profile View Modal -->
+            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModalLong">
+              Edit Profile
+            </button>
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit your profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{ profile_form.profile_pic|as_crispy_field }}
+                      {{ profile_form.bio|as_crispy_field }}
+                      {{ profile_form.profession|as_crispy_field }}
+                      {{ profile_form.country|as_crispy_field }}
+                      {{ profile_form.password_check|as_crispy_field }}
+                      <ul>
+                        {% for field in social_networks_form %}
+                          {{ field|as_crispy_field }}
+                        {% endfor %}
+                      </ul>
+                      <!-- {{ profile_form.interests|as_crispy_field }} -->
+                      {% for message in error_messages %}
+                        {{ message }}
+                      {% endfor %}
+                      <p><button type="button" class="btn btn-link mb-1"><a href="{% url 'password_reset' %}">Change my password</a></button></p>
+                      
+                      
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Edit Profile View Modal -->
+            {% else %}
+            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModalLong">
+              Follow
+            </button>
+            {% endif %}
+            <br>                      
+          </div>
+        </div>
+        <!-- End Profile -->  
+        <br>
+        <!-- Interests --> 
+        {% if account.profile.interests|length > 0 %}
+        <div class="w3-card w3-round w3-white w3-hide-small">
+          <div class="w3-container pl-3 pt-2">
+            <h5>Interests</h5>
+            <h6>
+            {% for interest in account.profile.interests.all %}
+                <span class="badge badge-secondary">{{ interest }}</span>    
+            {% endfor %}
+            </h6>
+            <br>
+          </div>
+        </div>
+        {% endif %}
+        <!-- End Interests -->
+      </div>
+      <!-- End Left Column -->
+      
+      <!-- Middle Column -->
+      <div class="w3-col m7">
+        <!-- Feed/Activity -->
+        <div class="w3-row-padding">
+          <div class="w3-col m12">
+            <div class="w3-card w3-round w3-white">
+              <div class="w3-container w3-padding">
+                <h5>Last seen</h5>
+                <p contenteditable="true" class="w3-border w3-padding">Status: Feeling Blue</p>
+                <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button> 
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <img src="/w3images/avatar2.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+          <span class="w3-right w3-opacity">1 min</span>
+          <h4>John Doe</h4><br>
+          <hr class="w3-clear">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <div class="w3-row-padding" style="margin:0 -16px">
+              <div class="w3-half">
+                <img src="/w3images/lights.jpg" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
+              </div>
+              <div class="w3-half">
+                <img src="/w3images/nature.jpg" style="width:100%" alt="Nature" class="w3-margin-bottom">
+            </div>
+          </div>
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button> 
+          <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
+        </div>
+        
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <img src="/w3images/avatar5.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+          <span class="w3-right w3-opacity">16 min</span>
+          <h4>Jane Doe</h4><br>
+          <hr class="w3-clear">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button> 
+          <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
+        </div>  
+  
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <img src="/w3images/avatar6.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+          <span class="w3-right w3-opacity">32 min</span>
+          <h4>Angie Jane</h4><br>
+          <hr class="w3-clear">
+          <p>Have you seen this?</p>
+          <img src="/w3images/nature.jpg" style="width:100%" class="w3-margin-bottom">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button> 
+          <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
+        </div> 
+        
+      <!-- End Middle Column -->
+      </div>
+      
+      <!-- Right Column -->
+      <div class="w3-col m2">
+        <!-- Alert Box -->
+        {% if not account.profile.interests %}
+        <div class="alert alert-info" role="alert">
+          {{ feed_message }} <u><a href="{url 'profile_edit'}">Add interests</a></u>
+        </div>
+        {% endif %}
+        <!-- End Alert Box -->
+        <div class="w3-card w3-round w3-white w3-center">
+          <div class="w3-container">
+            <p>Upcoming Events:</p>
+            <img src="/w3images/forest.jpg" alt="Forest" style="width:100%;">
+            <p><strong>Holiday</strong></p>
+            <p>Friday 15:00</p>
+            <p><button class="w3-button w3-block w3-theme-l4">Info</button></p>
+          </div>
+        </div>
+        <br>
+        
+        <div class="w3-card w3-round w3-white w3-center">
+          <div class="w3-container">
+            <p>Friend Request</p>
+            <img src="/w3images/avatar6.png" alt="Avatar" style="width:50%"><br>
+            <span>Jane Doe</span>
+            <div class="w3-row w3-opacity">
+              <div class="w3-half">
+                <button class="w3-button w3-block w3-green w3-section" title="Accept"><i class="fa fa-check"></i></button>
+              </div>
+              <div class="w3-half">
+                <button class="w3-button w3-block w3-red w3-section" title="Decline"><i class="fa fa-remove"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        
+        <div class="w3-card w3-round w3-white w3-padding-16 w3-center">
+          <p>ADS</p>
+        </div>
+        <br>
+        
+        <div class="w3-card w3-round w3-white w3-padding-32 w3-center">
+          <p><i class="fa fa-bug w3-xxlarge"></i></p>
+        </div>
+        
+      <!-- End Right Column -->
+      </div>
+      
+    <!-- End Grid -->
+    </div>
+    
+  <!-- End Page Container -->
+  </div>
+  <br>
+ 
+  <script>
+  // Accordion
+  function myFunction(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+      x.className += " w3-show";
+      x.previousElementSibling.className += " w3-theme-d1";
+    } else { 
+      x.className = x.className.replace("w3-show", "");
+      x.previousElementSibling.className = 
+      x.previousElementSibling.className.replace(" w3-theme-d1", "");
+    }
+  }
+  
+  // Used to toggle the menu on smaller screens when clicking on the menu button
+  function openNav() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+      x.className += " w3-show";
+    } else { 
+      x.className = x.className.replace(" w3-show", "");
+    }
+  }
+  </script>
+  
+  </body>
+  </html> 
+  
+
+
+{% endblock %}
