@@ -1,5 +1,5 @@
 from .forms import RegistrationForm, AccountAuthenticationForm
-from .models import Account, Profile
+from .models import Account, Profile, Follow, History
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -21,8 +21,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from account.mixins import ObjectViewMixin
 from roadmaps.models import RoadmapMembership, Roadmap, RoadmapTagRelationship
-from .forms import RegistrationForm, AccountAuthenticationForm, ProfileForm
+from .forms import RegistrationForm, AccountAuthenticationForm, ProfileForm, SocialNetwork, ConnectForm
 
 
 class AccountDetailView(LoginRequiredMixin, DetailView):
@@ -31,67 +32,118 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     template_name = 'account/account.html'
 
     def get_context_data(self, **kwargs):
+        #Obtenemos el context
         context = super().get_context_data(**kwargs)
-        context["last_seen"] = self.request.session.get('last_seen', None)
 
-        #Código para pasar al update form de nuestro profile dentro de la view
-        profile = get_object_or_404(Profile, user=self.kwargs['pk'])
-        context['profile_form'] = ProfileForm(instance=profile)
-        
-        # Código para agregar a la feed roadmaps recomendados en base a cuando se actualizaron por última vez
-        def user_roadmaps_feed(some_request:HttpRequest): #Algoritmo que nos dá la feed de los últimos roadmaps actualizados que entran en los intereses de nuestro user
-            updated_roadmaps_feed = []
-            new_roadmaps_feed = []
+        #Verificamos si el usuario es el mismo que el renderizado
+        if self.request.user.id != self.kwargs['pk']:
+            #Si el perfil en el que estamos no es el del usuario, entonces buscamos las membresías del tipo follow
+            account = Account.objects.get(id=self.kwargs['pk'])
+            prof = account.profile
+            try:
+                #Si existe una membresia en donde el perfil del user siga al perfil que renderizamos, entonces el perfil está siendo seguido por el usuario
+                Follow.objects.get(follower=self.request.user.profile.id, following=prof.id)
+                context['profile_followed_by_user'] = True
+            except Follow.DoesNotExist:
+                context['profile_followed_by_user'] = False    
+            try:
+                #Si existe una membresía en la cual el perfil siga al perfil del user del request, entonces estamos siendo seguidos por el perfil que estamos viendo
+                Follow.objects.get(follower=prof.id, following=self.request.user.profile.id)
+                context['profile_follows_user'] = True
+            except Follow.DoesNotExist:
+                context['profile_follows_user'] = False   
+
+        else:
+
+            #Creamos el query del historial para Last Seen y lo acortamos a 3 elementos 
+            context['history'] = History.objects.filter(account=self.request.user.id).order_by('-viewed_on')[:3]
+
+            #Creamos el query de la actividad del usuario que involucra crear cosas, terminar cosas
             
-            if some_request.user.profile.interests.count() > 0:
+
+            #Código para pasar al update form de nuestro profile dentro de la view
+            profile = get_object_or_404(Profile, user=self.kwargs['pk'])
+            context['profile_form'] = ProfileForm(instance=profile)
+
+            #Codigo para pasar connectform
+            socialnetwork_obj = profile.social_networks
+            context['connect_form'] = ConnectForm(instance=socialnetwork_obj)
+            
+            # Código para agregar a la feed roadmaps recomendados en base a cuando se actualizaron por última vez
+            def user_roadmaps_feed(some_request:HttpRequest): #Algoritmo que nos dá la feed de los últimos roadmaps actualizados que entran en los intereses de nuestro user
+                updated_roadmaps_feed = []
+                new_roadmaps_feed = []
                 
-                for interest in some_request.user.profile.interests.all():
-                    if len(updated_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
-                        break
-                    qs = RoadmapTagRelationship.objects.filter(tag=interest).order_by('updated_at')
-                    for rtr in qs:
+                if some_request.user.profile.interests.count() > 0:
+                    
+                    for interest in some_request.user.profile.interests.all():
                         if len(updated_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
                             break
-                        updated_roadmaps_feed.append(rtr.roadmap)
-                
-                for interest in some_request.user.profile.interests.all():
-                    if len(new_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
-                        break
-                    qs = RoadmapTagRelationship.objects.filter(tag=interest).order_by('created_at')
-                    for rtr in qs:
+                        qs = RoadmapTagRelationship.objects.filter(tag=interest).order_by('updated_at')
+                        for rtr in qs:
+                            if len(updated_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
+                                break
+                            updated_roadmaps_feed.append(rtr.roadmap)
+                    
+                    for interest in some_request.user.profile.interests.all():
                         if len(new_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
                             break
-                        new_roadmaps_feed.append(rtr.roadmap)
-                
-                # Si la feed tiene elementos la devuelvo
-                return updated_roadmaps_feed, new_roadmaps_feed
+                        qs = RoadmapTagRelationship.objects.filter(tag=interest).order_by('created_at')
+                        for rtr in qs:
+                            if len(new_roadmaps_feed) > 2: #Si la len ya tiene 3 objetos cortamos el loop
+                                break
+                            new_roadmaps_feed.append(rtr.roadmap)
+                    
+                    # Si la feed tiene elementos la devuelvo
+                    return updated_roadmaps_feed, new_roadmaps_feed
 
-            else: #Si el user no tiene intereses devuelvo el None para que lo evalúe como False la tempalte
-                
-                context['feed_message'] = 'Add some interests to see recommended content. '
-                return None, None
+                else: #Si el user no tiene intereses devuelvo el None para que lo evalúe como False la tempalte
+                    
+                    context['feed_message'] = 'Add some interests to see recommended content. '
+                    return None, None
 
-        a, b = user_roadmaps_feed(self.request)
-        
-        context['updated_roadmaps_feed'] = a
-        context['new_roadmaps_feed'] = b
+            a, b = user_roadmaps_feed(self.request)
+            
+            context['updated_roadmaps_feed'] = a
+            context['new_roadmaps_feed'] = b
 
         return context
 
     def post(self, request, pk):
-        profile = get_object_or_404(Profile, user=self.kwargs['pk']) #Agarramos el perfil donde el user sea el de la primary key que pasamos
-        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if not profile_form.is_valid():
-            context['profile_form', profile_form]
-            # form no cumple con los validators: cargamos de nuevo el form con los mensajes de error
-            return render(request, self.template_name, context)
-        password_check = profile_form.cleaned_data.get('password_check')
-        account = authenticate(email=self.request.user.email, password=password_check)
-        if account is None:
-            context.get('error_messages', []).append('Wrong user')
-        # Si todo sale bien guardamos al form en la db y volvemos a la home
-        profile = profile_form.save()
-        profile.save() # no se por qué, si no agrego ésta línea no se guarda
+        context = {}
+        account = Account.objects.get(id=pk)
+        prof = account.profile
+        if 'followbtn' in request.POST:
+            try:
+                #Si existe una membresía, la borramos
+                follow = Follow.objects.get(follower=self.request.user.profile.id, following=prof.id)
+                follow.delete()
+            except Follow.DoesNotExist:
+                #Si no existe una membresía, la creamos
+                prof_to_follow = Profile.objects.get(user=self.kwargs['pk'])
+                follow = Follow(follower=self.request.user.profile, following=prof_to_follow)
+                follow.save()
+
+
+        if 'saveform' in request.POST:
+            profile = get_object_or_404(Profile, user=self.kwargs['pk']) #Agarramos el perfil donde el user sea el de la primary key que pasamos
+            profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+            social_networks = profile.social_networks
+            connect_form = ConnectForm(request.POST, request.FILES, instance=social_networks)
+            if not profile_form.is_valid() and not connect_form.is_valid():
+                context['profile_form', profile_form]
+                context['connect_form', connect_form]
+                # form no cumple con los validators: cargamos de nuevo el form con los mensajes de error
+                return render(request, self.template_name, context)
+            password_check = profile_form.cleaned_data.get('password_check')
+            account = authenticate(email=self.request.user.email, password=password_check)
+            if account is None:
+                context.get('error_messages', []).append('Wrong user')
+            # Si todo sale bien guardamos al form en la db y volvemos a la home
+            profile = profile_form.save()
+            profile.save() # no se por qué, si no agrego ésta línea no se guarda
+            social_networks = connect_form.save()
+            social_networks.save()
         return redirect('account', pk)
     
 
@@ -106,7 +158,7 @@ def registration_view(request):
             #Pasamos las dos variables que acabamos de definir dentro de authenticate()
             account = authenticate(email=email, password=raw_password)
             login(request, account)
-            return redirect('main')
+            return redirect('home')
         else:
             context['registration_form'] = form
     else: #Si el request es GET significa que el user intentó obtener ésta página, por ende quiere registrarse
@@ -116,7 +168,7 @@ def registration_view(request):
 
 
 @login_required(login_url='login')
-def logout_view(request): #La view a lacual mandamos al user cuando da click en logout
+def logout_view(request): #La view a la cual mandamos al user cuando da click en logout
     logout(request) #Lo deslogueamos
     return redirect('main') #Lo redirigimos a la página principal
 

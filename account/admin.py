@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from account.models import Account, Profile, SocialNetwork
+from account.models import Account, Profile, SocialNetwork, History
 
 class AccountAdmin(UserAdmin):
     list_display = ('email', 'username', 'date_joined', 'last_login', 'is_staff', 'is_admin')
@@ -14,3 +14,4 @@ class AccountAdmin(UserAdmin):
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Profile)
 admin.site.register(SocialNetwork)
+admin.site.register(History)

@@ -3,6 +3,7 @@ from itertools import chain
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView, View, TemplateView
+from account.mixins import ObjectViewMixin
 from .owner import OwnerCreateView, OwnerDeleteView, OwnerDetailView, OwnerListView, OwnerUpdateView
 from .models import Roadmap, Topic, Item, Unit, RoadmapMembership, UnitMembership, ItemMembership
 
@@ -32,16 +33,13 @@ class RoadmapListView(ListView):
     model = Roadmap
     fields ='__all__'
 
-class RoadmapDetailView(DetailView):
+class RoadmapDetailView(ObjectViewMixin, DetailView):
     model = Roadmap
     fields = '__all__'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        #Agregamos ésto para ver qué roadmap fué el último visitado por el dueño de la session
-        last_seen = self.request.session.get('last_seen', Roadmap.objects.filter(id=self.kwargs['pk'])) #Creamos un last_seen si no lo hay
-        request.session['last_seen'] = Roadmap.objects.filter(id=self.kwargs['pk']) #Modificamos el last_seen por el que el user está viendo ahora si lo hay
         
         #Pasamos un queryset que sea mezcla de Units y Roadmaps
         unit_results = Unit.objects.filter(roadmap_id=self.kwargs['pk'])
@@ -84,15 +82,12 @@ class RoadmapDetailView(DetailView):
 
 
 
-class UnitDetailView(DetailView):
+class UnitDetailView(ObjectViewMixin, DetailView):
     model = Unit
     fields = '__all__'
     def get_context_data(self, **kwargs):
 
-        #Funcionalidad last seem
-        last_seen = self.request.session.get('last_seen', Unit.objects.filter(id=self.kwargs['pk'])) #Creamos un last_seen si no lo hay
-        request.session['last_seen'] =  Unit.objects.filter(id=self.kwargs['pk']) #Modificamos el last_seen por el que el user está viendo ahora si ya hay un last_seen
-
+        
         # Separo al context para agregarle lo que quiera
         context = super().get_context_data(**kwargs)
         # Le agrego al context dos querysets ordenados 

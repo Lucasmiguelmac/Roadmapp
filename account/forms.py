@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm#, UserChangeForm
 from django.contrib.auth import authenticate
 
 
-from account.models import Account, Profile
+from account.models import Account, Profile, SocialNetwork
 
 
 class ProfileForm(forms.ModelForm):
@@ -15,7 +15,12 @@ class ProfileForm(forms.ModelForm):
     
     class Meta:
         model = Profile
-        fields = ['profile_pic', 'bio', 'profession', 'interests', 'country']  
+        fields = ['profile_pic', 'bio', 'profession', 'interests', 'country', 'show_activity']
+
+class ConnectForm(forms.ModelForm):
+    class Meta:
+        model = SocialNetwork
+        exclude = ('profile',)
 
 
 class RegistrationForm(UserCreationForm): #Extiende a usercreationform

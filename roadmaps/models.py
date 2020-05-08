@@ -4,6 +4,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 
+
+
 class Topic(models.Model):
     title = models.CharField(
         null=False,
@@ -53,7 +55,7 @@ class Roadmap(models.Model):
         settings.AUTH_USER_MODEL, # El primer argumento de éste método es el modelo al cual apuntamos (EN ÉSTE CASO, LATABLA USER QUE NOS HACE DJANGO)
         on_delete=models.CASCADE,
     )
-    image = models.ImageField(upload_to='roadmap_images', blank=True, null=True)
+    image = models.ImageField(upload_to='roadmap_images', default='images/logo.png')
 
     objectives = models.CharField(max_length=1200, default='')
     
@@ -80,14 +82,18 @@ class Roadmap(models.Model):
         default=PUBLIC,
     )
 
-
-    def model_name(self):
-        return self._meta.model_name
-    
     def __str__(self):
         if self.place != None:
-            return "Unit " + str(self.place) +" | " + self.title
-        return self.title
+            prefix = ''
+            parent_roadmap = self.parent_roadmap
+            while parent_roadmap:
+                prefix += '1.'
+                if parent_roadmap.parent_roadmap:
+                    parent_roadmap = parent_roadmap.parent_roadmap
+                else:
+                    break
+            return 'Roadmap' + prefix + ': ' + str(self.place) + ' | ' + self.title
+        return 'Roadmap: ' + self.title
 
     #No probé si anda todavía    
     def get_absolute_url(self):
@@ -120,7 +126,7 @@ class Unit(models.Model):
         return self._meta.model_name
 
     def __str__(self):
-        return "Unit " + str(self.place) +" | " + self.title
+        return self.roadmap.title + " / Unit " + str(self.place) +": " + self.title
 
     def get_absolute_url(self):
         return reverse('unit_detail', args=[str(self.id)])

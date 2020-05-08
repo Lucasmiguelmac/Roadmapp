@@ -91,16 +91,16 @@
                   <a href="{{ account.profile.social_networks.personal_site }}"><span class="material-icons">business_center</span></a>
                 {% endif %}
                 {% if account.profile.social_networks.linkedin_profile %}
-                  <a href="{{ account.profile.social_networks.linkedin_profile }}" class="li-ic mr-3" role="button"><i class="fab fa-lg fa-linkedin-in"></i></a>
+                  <a href="{{ account.profile.social_networks.linkedin_profile }}" class="li-ic mr-1" role="button"><i class="fab fa-lg fa-linkedin-in"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.github_profile %}
-                  <a href="{{ account.profile.social_networks.github_profile }}" class="git-ic mr-3" role="button"><i class="fab fa-lg fa-github"></i></a>
+                  <a href="{{ account.profile.social_networks.github_profile }}" class="git-ic" role="button"><i class="fab fa-lg fa-github"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.twitter_username %}
-                  <a href="https://twitter.com/{{ account.profile.social_networks.twitter_username }}/" class="tw-ic mr-3" role="button"><i class="fab fa-lg fa-twitter"></i></a>
+                  <a href="https://twitter.com/{{ account.profile.social_networks.twitter_username }}/" class="tw-ic" role="button"><i class="fab fa-lg fa-twitter"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.instagram_username %}
-                  <a href="https://www.instagram.com/{{ account.profile.social_networks.instagram_username }}/" class="ins-ic mr-3" role="button"><i class="fab fa-lg fa-instagram"></i></a>
+                  <a href="https://www.instagram.com/{{ account.profile.social_networks.instagram_username }}/" class="ins-ic" role="button"><i class="fab fa-lg fa-instagram"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.blog %}
                   <a href="{{ account.profile.social_networks.blog }}">
@@ -111,19 +111,19 @@
                   </a>
                 {% endif %}
                 {% if account.profile.social_networks.youtube_channel %}
-                  <a href="{{ account.profile.social_networks.youtube_channel }}" class="yt-ic mr-3" role="button"><i class="fab fa-lg fa-youtube"></i></a>
+                  <a href="{{ account.profile.social_networks.youtube_channel }}" class="yt-ic" role="button"><i class="fab fa-lg fa-youtube"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.stackoverflow_profile %}
-                  <a href="{{ account.profile.social_networks.stackoverflow_profile }}" class="so-ic mr-3" role="button"><i class="fab fa-lg fa-stack-overflow"></i></a>
+                  <a href="{{ account.profile.social_networks.stackoverflow_profile }}" class="so-ic" role="button"><i class="fab fa-lg fa-stack-overflow"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.reddit_username %}
-                  <a href="https://www.reddit.com/user/{{ account.profile.social_networks.reddit_username }}/" class="reddit-ic mr-3" role="button"><i class="fab fa-lg fa-reddit-alien"></i></a>
+                  <a href="https://www.reddit.com/user/{{ account.profile.social_networks.reddit_username }}/" class="reddit-ic" role="button"><i class="fab fa-lg fa-reddit-alien"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.facebook_profile %}
-                  <a href="{{ account.profile.social_networks.facebook_profile }}" class="fb-ic mr-3" role="button"><i class="fab fa-lg fa-facebook-f"></i></a>
+                  <a href="{{ account.profile.social_networks.facebook_profile }}" class="fb-ic" role="button"><i class="fab fa-lg fa-facebook-f"></i></a>
                 {% endif %}
                 {% if account.profile.social_networks.show_email %}
-                <a href="mailto:{{ account.email }}" class="email-ic mr-3" role="button"><i class="far fa-lg fa-envelope"></i></a>
+                <a href="mailto:{{ account.email }}" class="email-ic" role="button"><i class="far fa-lg fa-envelope"></i></a>
                 {% endif %}
               </p>
               </div>
@@ -149,6 +149,8 @@
                       {{ profile_form.bio|as_crispy_field }}
                       {{ profile_form.profession|as_crispy_field }}
                       {{ profile_form.country|as_crispy_field }}
+                      {{ connect_form|crispy }}
+                      {{ profile_form.show_activity|as_crispy_field }}
                       {{ profile_form.password_check|as_crispy_field }}
                       <ul>
                         {% for field in social_networks_form %}
@@ -163,18 +165,24 @@
                       
                       
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>
+                      <button type="submit" class="btn btn-primary" name="saveform">Save changes</button>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
             <!-- End Edit Profile View Modal -->
+            <!-- Follow/Unfollow Button -->
             {% else %}
-            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModalLong">
-              Follow
-            </button>
+            {% if profile_follows_user %}<span class="badge badge-pill badge-info">Follows you</span>{% endif %}
+            <form method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-secondary btn-block" name="followbtn">
+                {% if profile_followed_by_user %}Unfollow{% else %}Follow{% endif %}
+              </button>
+            </form>
             {% endif %}
+            <!-- End Follow/Unfollow Button -->
             <br>                      
           </div>
         </div>
@@ -203,17 +211,25 @@
         <!-- Feed/Activity -->
         <div class="w3-row-padding">
           <div class="w3-col m12">
-            <div class="w3-card w3-round w3-white">
+            {% if account.profile.show_activity or user == account %}
+            <div class="w3-card w3-round w3-white w3-margin-bottom pb-3">
               <div class="w3-container w3-padding">
-                <h5>Last seen</h5>
-                <p contenteditable="true" class="w3-border w3-padding">Status: Feeling Blue</p>
-                <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button> 
+                  <h5 class="text-muted">Last seen</h5>
+                  {% if history %}
+                    {% for history_object in history %}
+                      <button class="btn btn-link ml-1"><a href="">{{ history_object.content_object }}</a></u> <span class="text-muted">({{ history_object.viewed_on }})</span></button>
+                      <hr class="my-0 mx-3">
+                    {% endfor %}
+                  {% else %}
+                    <p>No activity yet...<span class="p-1 w3-text-blue"><a href="">See topics</a>|<a href="">See roadmaps</a></span></p>
+                  {% endif %}
               </div>
             </div>
+            {% endif %}
           </div>
         </div>
         
-        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-margin-bottom"><br>
           <img src="/w3images/avatar2.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
           <span class="w3-right w3-opacity">1 min</span>
           <h4>John Doe</h4><br>
@@ -231,7 +247,7 @@
           <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
         </div>
         
-        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-margin-bottom"><br>
           <img src="/w3images/avatar5.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
           <span class="w3-right w3-opacity">16 min</span>
           <h4>Jane Doe</h4><br>
@@ -241,7 +257,7 @@
           <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button> 
         </div>  
   
-        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-margin-bottom"><br>
           <img src="/w3images/avatar6.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
           <span class="w3-right w3-opacity">32 min</span>
           <h4>Angie Jane</h4><br>
@@ -261,7 +277,7 @@
         <!-- Alert Box -->
         {% if not account.profile.interests %}
         <div class="alert alert-info" role="alert">
-          {{ feed_message }} <u><a href="{url 'profile_edit'}">Add interests</a></u>
+          {{ feed_message }} <u><button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModalLong">Add interests</button></u>
         </div>
         {% endif %}
         <!-- End Alert Box -->

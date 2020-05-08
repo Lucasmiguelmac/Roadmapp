@@ -34,10 +34,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'roadmaps.apps.RoadmapsConfig',
     'storages',
-    'account',
+    'account.apps.AccountConfig', #Referenciamos a appconfig en vez de solo 'account' para así se importan las signals
     'django.contrib.admin', #Pongo ésto abajo de la app account así se renderizan en primer lugar mis templates y en segundo la templates de admin (en caso de que el url tenga el mismo nombre)
     'crispy_forms',
     'django_countries',
+    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
